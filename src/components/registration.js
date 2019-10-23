@@ -50,8 +50,8 @@ function RegistrationForm({ handleChange, handleSubmit, error }) {
     );
 }
 
-export default function Register() {
-    return <AuthForm url="/register" component={RegistrationForm} />;
+export default function Registration() {
+    return <AuthForm aciton="/registration" component={RegistrationForm} />;
 }
 
 const styles = {

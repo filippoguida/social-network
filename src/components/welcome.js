@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
-import Register from "./register";
+import Registration from "./registration";
 import Login from "./login";
 
 export default class Welcome extends React.Component {
@@ -16,7 +16,7 @@ export default class Welcome extends React.Component {
                 <img src="/images/welcome-logo.png" />
                 <HashRouter>
                     <div>
-                        <Route exact path="/" component={Register} />
+                        <Route exact path="/" component={Registration} />
                         <Route path="/login" component={Login} />
                     </div>
                 </HashRouter>

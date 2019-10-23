@@ -37,7 +37,7 @@ function LogInForm({ handleChange, handleSubmit, error }) {
 }
 
 export default function LogIn() {
-    return <AuthForm url="/register" component={LogInForm} />;
+    return <AuthForm aciton="/login" component={LogInForm} />;
 }
 
 const styles = {

@@ -31,7 +31,7 @@ app.get("*", function(req, res) {
     else res.sendFile(__dirname + "/index.html");
 });
 
-app.post("/register", function(req, res) {
+app.post("/registration", function(req, res) {
     console.log(req.body);
     if (!req.session.userId)
         db.addUser(req.body)
