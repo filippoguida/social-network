@@ -15,10 +15,9 @@ export default class Register extends React.Component {
     }
 
     submit() {
-        let { first, last, email, password } = this.state;
-        console.log(first, last, email, password);
+        let { email, password } = this.state;
         axios
-            .post("/register", { first, last, email, password })
+            .post("/login", { email, password })
             .catch(() => this.setState({ error: true }));
     }
 
@@ -30,21 +29,6 @@ export default class Register extends React.Component {
                         Oops! Something went wrong, please try again.
                     </div>
                 )}
-                <input
-                    style={styles.formElement}
-                    type="text"
-                    name="first"
-                    placeholder="First Name"
-                    onChange={e => this.handleChange(e)}
-                />
-                <input
-                    style={styles.formElement}
-                    type="text"
-                    name="last"
-                    placeholder="Last Name"
-                    onChange={e => this.handleChange(e)}
-                />
-
                 <input
                     style={styles.formElement}
                     type="email"
@@ -63,11 +47,11 @@ export default class Register extends React.Component {
                     style={styles.formElement}
                     onClick={() => this.submit()}
                 >
-                    Register
+                    Login
                 </button>
                 <div>
                     <p>
-                        Already a member? <Link to="/login">Log In</Link>
+                        Not a member? <Link to="/">Log In</Link>
                     </p>
                 </div>
             </div>

@@ -4,8 +4,8 @@ import ReactDOM from "react-dom";
 import Welcome from "./components/welcome";
 
 let elem;
-const userIsNotLoggedIn = location.pathname == "/welcome";
-if (userIsNotLoggedIn) {
+const userIsLoggedIn = location.pathname == "/welcome";
+if (userIsLoggedIn) {
     elem = <Welcome />;
 } else {
     elem = <img src="logo.png" />;
