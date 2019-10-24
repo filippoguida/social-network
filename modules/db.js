@@ -12,7 +12,7 @@ module.exports.addUser = body => {
             .hash(password)
             .then(hash => {
                 db.query(
-                    `INSERT INTO users (first_name, last_name, email, password)
+                    `INSERT INTO users (first, last, email, password)
                     VALUES ($1, $2, $3, $4) RETURNING id`,
                     [first, last, email, hash]
                 )
@@ -42,4 +42,19 @@ module.exports.getUserId = body => {
             })
             .catch(err => reject(err));
     });
+};
+
+module.exports.getUserData = userId => {
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT * FROM users WHERE id = $1`, [userId])
+            .then(sqlTab => resolve(sqlTab.rows[0]))
+            .catch(err => reject(err));
+    });
+};
+
+module.exports.addImage = (userId, imgUrl) => {
+    return db.query(`UPDATE users SET imgUrl = $2 WHERE id = $1`, [
+        userId,
+        imgUrl
+    ]);
 };

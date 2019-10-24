@@ -16,6 +16,7 @@ export default class AuthForm extends React.Component {
     handleSubmit() {
         axios
             .post(this.props.action, this.state)
+            .then(() => location.replace("/"))
             .catch(() => this.setState({ error: true }));
     }
 

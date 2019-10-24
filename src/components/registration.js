@@ -30,6 +30,7 @@ function RegistrationForm({ handleChange, handleSubmit, error }) {
                 type="email"
                 name="email"
                 placeholder="Email"
+                onChange={e => handleChange(e)}
             />
             <input
                 style={styles.formElement}
@@ -51,7 +52,7 @@ function RegistrationForm({ handleChange, handleSubmit, error }) {
 }
 
 export default function Registration() {
-    return <AuthForm aciton="/registration" component={RegistrationForm} />;
+    return <AuthForm action="/registration" component={RegistrationForm} />;
 }
 
 const styles = {

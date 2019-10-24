@@ -1,7 +1,10 @@
 const compression = require("compression");
 const db = require("./modules/db");
+const s3 = require("./modules/s3");
+const uploader = require("./modules/uploader");
 const cookies = require("./middelware/cookies");
 const auth = require("./middelware/auth");
+const rq = require("./middelware/requirements");
 const express = require("express");
 const app = express();
 
@@ -21,35 +24,52 @@ app.use(express.json());
 app.use(cookies);
 app.use(auth);
 
-app.get("/welcome", function(req, res) {
-    if (req.session.userId) res.redirect("/");
-    else res.sendFile(__dirname + "/index.html");
+//- JSON GET
+app.get("/user", rq.login, function(req, res) {
+    db.getUser(req.session.userId)
+        .then(userData => {
+            res.json(userData);
+        })
+        .catch(() => res.json({ error: true }));
 });
 
-app.get("*", function(req, res) {
-    if (!req.session.userId) res.redirect("/welcome");
-    else res.sendFile(__dirname + "/index.html");
-});
+//- HTML GET
+const sendHtml = (req, res) => res.sendFile(__dirname + "/index.html");
+app.get("/welcome", rq.noLogin, sendHtml);
+app.get("*", rq.login, sendHtml);
 
+//- POST
 app.post("/registration", function(req, res) {
-    console.log(req.body);
-    if (!req.session.userId)
-        db.addUser(req.body)
-            .then(id => {
-                req.session.id = id;
-                res.redirect("/");
-            })
-            .catch(e => console.log(e))
-            .catch(() => res.sendStatus(500));
+    db.addUser(req.body)
+        .then(id => {
+            req.session.userId = id;
+            res.sendStatus(200);
+        })
+        .catch(() => res.sendStatus(500));
 });
 
 app.post("/login", (req, res) => {
     db.getUserId(req.body)
         .then(id => {
-            req.session.id = id;
-            res.redirect("/");
+            req.session.userId = id;
+            res.sendStatus(200);
         })
         .catch(() => res.sendStatus(500));
+});
+
+app.post("/user", (req, res) => {
+    db.getUserData(req.session.userId)
+        .then(userData => {
+            res.json(userData);
+        })
+        .catch(() => res.sendStatus(500));
+});
+
+app.post("/profilepicture", uploader.single("file"), (req, res) => {
+    console.log(req.file);
+    /*db.addImage(req.session.userId, req.file)
+        .then(() => res.json({ test: "test" }))
+        .catch(() => res.sendStatus(500));*/
 });
 
 app.listen(8080, function() {
