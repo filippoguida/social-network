@@ -53,7 +53,7 @@ module.exports.getUserData = userId => {
 };
 
 module.exports.addImage = (userId, imgUrl) => {
-    return db.query(`UPDATE users SET imgUrl = $2 WHERE id = $1`, [
+    return db.query(`UPDATE users SET imageurl = $2 WHERE id = $1`, [
         userId,
         imgUrl
     ]);

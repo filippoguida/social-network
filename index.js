@@ -9,7 +9,6 @@ const express = require("express");
 const app = express();
 
 app.use(compression());
-app.use(express.static("public"));
 if (process.env.NODE_ENV != "production") {
     app.use(
         "/bundle.js",
@@ -20,6 +19,7 @@ if (process.env.NODE_ENV != "production") {
 } else {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
+app.use("/public", express.static("public"));
 app.use(express.json());
 app.use(cookies);
 app.use(auth);
@@ -66,10 +66,10 @@ app.post("/user", (req, res) => {
 });
 
 app.post("/profilepicture", uploader.single("file"), (req, res) => {
-    console.log(req.file);
-    /*db.addImage(req.session.userId, req.file)
-        .then(() => res.json({ test: "test" }))
-        .catch(() => res.sendStatus(500));*/
+    let { destination, filename } = req.file;
+    db.addImage(req.session.userId, `${destination}/${filename}`)
+        .then(() => res.sendStatus(200))
+        .catch(() => res.sendStatus(500));
 });
 
 app.listen(8080, function() {
