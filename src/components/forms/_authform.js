@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "../axios";
+import axios from "../modules/axios";
 
 export default class AuthForm extends React.Component {
     constructor(props) {

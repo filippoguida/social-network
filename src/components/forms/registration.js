@@ -1,5 +1,5 @@
 import React from "react";
-import AuthForm from "./authform";
+import AuthForm from "./_authform";
 import { Link } from "react-router-dom";
 
 function RegistrationForm({ handleChange, handleSubmit, error }) {

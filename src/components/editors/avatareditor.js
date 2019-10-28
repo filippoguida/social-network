@@ -1,7 +1,7 @@
 import React from "react";
-import Uploader from "./uploader";
+import Editor from "./_editor";
 
-function ImageUploadModal({ error, message, upload }) {
+function AvatarEditorModal({ handleUpload, error }) {
     let picture = null;
     return (
         <div>
@@ -11,28 +11,20 @@ function ImageUploadModal({ error, message, upload }) {
                 </div>
             )}
             <div style={styles.uploadContainer}>
-                <h3>{message}</h3>
+                <h3>Select new profile image</h3>
                 <input
                     type="file"
                     accept="image/*"
                     onChange={e => (picture = e.target.files[0])}
                 />
-                <button onClick={() => upload(picture)}>Upload</button>
+                <button onClick={() => handleUpload(picture)}>Upload</button>
             </div>
         </div>
     );
 }
 
-export default function ImageUploader({ message, onSubmit, onUpload }) {
-    return (
-        <Uploader
-            action="/profilepicture"
-            message={message}
-            upload={onSubmit}
-            component={ImageUploadModal}
-            onUpload={onUpload}
-        />
-    );
+export default function AvatarEditor() {
+    return <Editor action="/profilepicture" component={AvatarEditorModal} />;
 }
 
 const styles = {
