@@ -29,9 +29,6 @@ function OtherProfileView({ first, last, imageurl, otherUser, handleUpload }) {
                         <Biography biography={otherUser.biography} />
                     </div>
                 )}
-                {otherUser == null && (
-                    <div>404: The selected user do not exist</div>
-                )}
             </div>
             {editAvatar && (
                 <AvatarEditorModal

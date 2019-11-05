@@ -9,16 +9,19 @@ export default class View extends React.Component {
 
     async componentDidMount() {
         await axios.post("/user").then(user => this.setState(user.data));
-        if (this.props.match) {
-            if (this.props.match.params.id != this.state.id) {
-                let otherUser = await axios.get(
-                    "/user/" + this.props.match.params.id
-                );
-                this.setState({
-                    otherUser: otherUser.data
-                });
-            } else this.props.history.push("/");
-        } else return null;
+        try {
+            if (this.props.match)
+                if (this.props.match.params.id != this.state.id) {
+                    let otherUser = await axios.get(
+                        "/user/" + this.props.match.params.id
+                    );
+                    this.setState({
+                        otherUser: otherUser.data
+                    });
+                } else this.props.history.push("/");
+        } catch (e) {
+            this.props.history.push("/");
+        }
     }
 
     handleInput({ target }) {
