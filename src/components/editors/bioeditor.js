@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Editor from "./_editor";
 
-function BioEditorTextarea({ biography, handleInput, handleSubmit, error }) {
-    let editing = null;
-    let toggleEditor = () => (editing = !editing);
+function BioEditorUI({ error, handleInput, handleSubmit, biography }) {
+    const [editing, setEditing] = useState(false);
+    const toggleEditor = () => setEditing(!editing);
     return (
         <div>
             {error && (
@@ -17,23 +17,29 @@ function BioEditorTextarea({ biography, handleInput, handleSubmit, error }) {
                     rows="10"
                     cols="50"
                     onInput={e => handleInput(e)}
+                    value={biography || ""}
                     readOnly={!editing}
-                >
-                    {biography}
-                </textarea>
-                {!editing && <button onClick={toggleEditor()}>edit</button>}
-                {editing && <button onClick={handleSubmit()}>save</button>}
+                />
+                {!editing && (
+                    <button onClick={() => toggleEditor()}>edit</button>
+                )}
+                {editing && (
+                    <button onClick={() => handleSubmit().then(toggleEditor)}>
+                        save
+                    </button>
+                )}
             </div>
         </div>
     );
 }
 
-export default function BioEditor() {
-    return <Editor action="/biography" component={BioEditorTextarea} />;
+export default function BioEditor(props) {
+    return <Editor {...props} action="/biography" component={BioEditorUI} />;
 }
 
 const styles = {
     biographyContaienr: {
-        display: "flex"
+        display: "flex",
+        margin: "50px"
     }
 };

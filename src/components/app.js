@@ -1,22 +1,33 @@
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
-import MainLayout from "./layouts/mainlayout";
-import AvatarHeader from "../avatar/avatarheader";
-import Welcome from "../views/welcome";
-import Profile from "../views/profile";
+import AvatarHeader from "./avatar/avatarheader";
+import Profile from "./views/profile";
 
 export default function App() {
     return (
-        <MainLayout
-            headerComponent={AvatarHeader}
-            view={
+        <div>
+            <div style={styles.headerContainer}>
+                <img src="public/images/header-logo.png" />
+                <AvatarHeader />
+            </div>
+            <div style={styles.mainContainer}>
                 <HashRouter>
                     <div>
-                        <Route exact path="/" component={Welcome} />
-                        <Route path="/profile" component={Profile} />
+                        <Route path="/" component={Profile} />
                     </div>
                 </HashRouter>
-            }
-        />
+            </div>
+        </div>
     );
 }
+
+const styles = {
+    headerContainer: {
+        display: "flex",
+        justifyContent: "space-between"
+    },
+    mainContainer: {
+        display: "flex",
+        justifyContent: "center"
+    }
+};

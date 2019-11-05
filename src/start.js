@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Welcome from "./components/views/welcome";
 import App from "./components/app";
-//import Welcome from "./components/welcome";
 
-/*let elem;
+let elem;
 const userIsLoggedIn = location.pathname == "/welcome";
 if (userIsLoggedIn) {
     elem = <Welcome />;
 } else {
     elem = <App />;
-}*/
+}
 
-ReactDOM.render(<App />, document.querySelector("main"));
+ReactDOM.render(elem, document.querySelector("main"));

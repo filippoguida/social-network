@@ -54,7 +54,10 @@ app.post("/login", (req, res) => {
             req.session.userId = id;
             res.sendStatus(200);
         })
-        .catch(() => res.sendStatus(500));
+        .catch(e => {
+            console.log(e);
+            res.sendStatus(500);
+        });
 });
 
 app.post("/user", (req, res) => {
@@ -67,7 +70,14 @@ app.post("/user", (req, res) => {
 
 app.post("/profilepicture", uploader.single("file"), (req, res) => {
     let { destination, filename } = req.file;
-    db.addImage(req.session.userId, `${destination}/${filename}`)
+    db.updateProfilePicture(req.session.userId, `${destination}/${filename}`)
+        .then(() => res.sendStatus(200))
+        .catch(() => res.sendStatus(500));
+});
+
+app.post("/biography", (req, res) => {
+    let { biography } = req.body;
+    db.updateBio(req.session.userId, biography)
         .then(() => res.sendStatus(200))
         .catch(() => res.sendStatus(500));
 });

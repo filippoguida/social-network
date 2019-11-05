@@ -1,35 +1,26 @@
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
-import Registration from "../forms/registration";
-import Login from "../forms/login";
+import View from "./_view";
+import AvatarProfile from "../avatar/avatarprofile";
+import BioEditor from "../editors/bioeditor";
 
-export default class Welcome extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+function ProfileView() {
+    return (
+        <div style={styles.profileContainer}>
+            <AvatarProfile />
+            <BioEditor />
+        </div>
+    );
+}
 
-    render() {
-        return (
-            <div style={styles.welcomeContainer}>
-                <h1>Profile</h1>
-                <img src="/images/welcome-logo.png" />
-                <HashRouter>
-                    <div>
-                        <Route exact path="/" component={Registration} />
-                        <Route path="/login" component={Login} />
-                    </div>
-                </HashRouter>
-            </div>
-        );
-    }
+export default function Profile() {
+    return <View component={ProfileView} />;
 }
 
 const styles = {
-    welcomeContainer: {
+    profileContainer: {
         display: "flex",
-        flexDirection: "column",
         justifyContents: "center",
-        alignItems: "center"
+        alignItems: "center",
+        margin: "100px"
     }
 };

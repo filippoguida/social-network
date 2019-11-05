@@ -52,9 +52,16 @@ module.exports.getUserData = userId => {
     });
 };
 
-module.exports.addImage = (userId, imgUrl) => {
+module.exports.updateProfilePicture = (userId, imgUrl) => {
     return db.query(`UPDATE users SET imageurl = $2 WHERE id = $1`, [
         userId,
         imgUrl
+    ]);
+};
+
+module.exports.updateBio = (userId, biography) => {
+    return db.query(`UPDATE users SET biography = $2 WHERE id = $1`, [
+        userId,
+        biography
     ]);
 };

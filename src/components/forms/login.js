@@ -29,7 +29,7 @@ function LogInForm({ handleChange, handleSubmit, error }) {
             </button>
             <div>
                 <p>
-                    Not a member? <Link to="/">Log In</Link>
+                    Not a member? <Link to="/">Sign In</Link>
                 </p>
             </div>
         </div>

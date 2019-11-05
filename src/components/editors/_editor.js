@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "../axios";
+import axios from "../modules/axios";
 
 export default class Editor extends React.Component {
     constructor(props) {
@@ -7,16 +7,19 @@ export default class Editor extends React.Component {
         this.state = {};
     }
 
-    handleChange({ target }) {
+    async componentDidMount() {
+        await axios.post("/user").then(user => this.setState(user.data));
+    }
+
+    handleInput({ target }) {
         this.setState({
             [target.name]: target.value
         });
     }
 
     handleSubmit() {
-        axios
-            .post(this.props.action, this.state)
-            .then(() => location.replace("/"))
+        return axios
+            .post(this.props.action, { ...this.state })
             .catch(() => this.setState({ error: true }));
     }
 
@@ -28,7 +31,7 @@ export default class Editor extends React.Component {
         form.set("file", file);
         return axios
             .post(this.props.action, form)
-            .then(() => this.props.onUpload())
+            .then(() => this.props.syncData())
             .catch(() => this.setState({ error: true }));
     }
 
@@ -36,9 +39,9 @@ export default class Editor extends React.Component {
         const Component = this.props.component;
         return (
             <Component
+                {...this.state}
                 error={this.state.error}
-                message={this.props.message}
-                handleChange={e => this.handleChange(e)}
+                handleInput={e => this.handleInput(e)}
                 handleSubmit={e => this.handleSubmit(e)}
                 handleUpload={file => this.upload(file)}
             />

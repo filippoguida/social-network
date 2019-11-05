@@ -1,10 +1,15 @@
 import React from "react";
-import AvatarEditor from "./avatareditor";
+import AvatarEditor from "../editors/avatareditor";
+import axios from "../modules/axios";
 
 export default class Avatar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+    }
+
+    async componentDidMount() {
+        await axios.post("/user").then(user => this.setState(user.data));
     }
 
     handleClick() {

@@ -24,7 +24,6 @@ function RegistrationForm({ handleChange, handleSubmit, error }) {
                 placeholder="Last Name"
                 onChange={e => handleChange(e)}
             />
-
             <input
                 style={styles.formElement}
                 type="email"
