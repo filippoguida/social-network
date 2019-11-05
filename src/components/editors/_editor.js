@@ -25,13 +25,10 @@ export default class Editor extends React.Component {
 
     handleUpload(file) {
         let form = new FormData();
-        for (let key in this.state) {
-            form.set(key, this.state[key]);
-        }
         form.set("file", file);
         return axios
             .post(this.props.action, form)
-            .then(() => this.props.syncData())
+            .then(() => this.props.onUpload())
             .catch(() => this.setState({ error: true }));
     }
 
@@ -43,7 +40,7 @@ export default class Editor extends React.Component {
                 error={this.state.error}
                 handleInput={e => this.handleInput(e)}
                 handleSubmit={e => this.handleSubmit(e)}
-                handleUpload={file => this.upload(file)}
+                handleUpload={file => this.handleUpload(file)}
             />
         );
     }

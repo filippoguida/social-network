@@ -1,7 +1,7 @@
 import React from "react";
 import Editor from "./_editor";
 
-function AvatarEditorModal({ handleUpload, error }) {
+function AvatarEditorModal({ error, handleUpload }) {
     let picture = null;
     return (
         <div>
@@ -23,8 +23,14 @@ function AvatarEditorModal({ handleUpload, error }) {
     );
 }
 
-export default function AvatarEditor() {
-    return <Editor action="/profilepicture" component={AvatarEditorModal} />;
+export default function AvatarEditor(props) {
+    return (
+        <Editor
+            {...props}
+            action="/profilepicture"
+            component={AvatarEditorModal}
+        />
+    );
 }
 
 const styles = {
