@@ -1,6 +1,6 @@
 const compression = require("compression");
 const db = require("./modules/db");
-const s3 = require("./modules/s3");
+//const s3 = require("./modules/s3");
 const uploader = require("./modules/uploader");
 const cookies = require("./middelware/cookies");
 const auth = require("./middelware/auth");
@@ -25,10 +25,12 @@ app.use(cookies);
 app.use(auth);
 
 //- JSON GET
-app.get("/user", rq.login, function(req, res) {
-    db.getUser(req.session.userId)
+app.get(["/user", "/user/:userId"], rq.login, function(req, res) {
+    let id = req.params.userId || req.session.userId;
+    db.getUserData(id)
         .then(userData => {
-            res.json(userData);
+            if (!userData) res.sendStatus(404);
+            else res.json(userData);
         })
         .catch(() => res.json({ error: true }));
 });

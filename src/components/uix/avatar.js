@@ -3,7 +3,11 @@ import React from "react";
 function Avatar({ first, last, imageurl, onClick, style }) {
     let url = imageurl || "/public/images/profile-default.png";
     return (
-        <div onClick={() => onClick()}>
+        <div
+            onClick={() => {
+                if (onClick) onClick();
+            }}
+        >
             <img style={style} src={url} alt={`${first}-${last}`} />
         </div>
     );

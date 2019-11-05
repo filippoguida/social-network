@@ -2,20 +2,11 @@ import React, { useState } from "react";
 import View from "./_view";
 import { AvatarEditorModal } from "../uix/modals";
 import { AvatarProfile, AvatarHeader } from "../uix/avatar";
-import { BiographyEditable } from "../uix/biography";
+import { Biography } from "../uix/biography";
 
-function ProfileView({
-    first,
-    last,
-    imageurl,
-    biography,
-    handleInput,
-    handleSubmit,
-    handleUpload
-}) {
+function OtherProfileView({ first, last, imageurl, otherUser, handleUpload }) {
     let [editAvatar, setEditAvatar] = useState(false);
     let toggleEditAvatar = () => setEditAvatar(!editAvatar);
-
     return (
         <React.Fragment>
             <div style={styles.headerContainer}>
@@ -28,19 +19,19 @@ function ProfileView({
                 />
             </div>
             <div style={styles.mainContainer}>
-                <div style={styles.profileContainer}>
-                    <AvatarProfile
-                        first={first}
-                        last={last}
-                        imageurl={imageurl}
-                        onClick={() => toggleEditAvatar()}
-                    />
-                    <BiographyEditable
-                        biography={biography}
-                        onInput={e => handleInput(e)}
-                        onEdit={() => handleSubmit("/biography")}
-                    />
-                </div>
+                {otherUser && (
+                    <div style={styles.profileContainer}>
+                        <AvatarProfile
+                            first={otherUser.first}
+                            last={otherUser.last}
+                            imageurl={otherUser.imageurl}
+                        />
+                        <Biography biography={otherUser.biography} />
+                    </div>
+                )}
+                {otherUser == null && (
+                    <div>404: The selected user do not exist</div>
+                )}
             </div>
             {editAvatar && (
                 <AvatarEditorModal
@@ -51,8 +42,8 @@ function ProfileView({
     );
 }
 
-export default function Profile(props) {
-    return <View {...props} component={ProfileView} />;
+export default function OtherProfile(props) {
+    return <View {...props} component={OtherProfileView} />;
 }
 
 const styles = {
