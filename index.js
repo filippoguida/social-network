@@ -70,8 +70,9 @@ app.post("/user", (req, res) => {
 
 app.post("/profilepicture", uploader.single("file"), (req, res) => {
     let { destination, filename } = req.file;
-    db.updateProfilePicture(req.session.userId, `${destination}/${filename}`)
-        .then(() => res.sendStatus(200))
+    let imageurl = `${destination.substr(1)}/${filename}`; //remove point
+    db.updateProfilePicture(req.session.userId, imageurl)
+        .then(() => res.json({ imageurl }))
         .catch(() => res.sendStatus(500));
 });
 
