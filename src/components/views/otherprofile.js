@@ -1,13 +1,13 @@
 import React from "react";
 import View from "./_view";
-import AvatarProfile from "../readers/avatarprofile";
+import AvatarProfile from "../avatar/avatarprofile";
 import BioEditor from "../editors/bioeditor";
 
-function ProfileView() {
+function OtherProfileView() {
     return (
         <div style={styles.profileContainer}>
             <AvatarProfile />
-            <BioEditor />
+            <BioReader />
         </div>
     );
 }

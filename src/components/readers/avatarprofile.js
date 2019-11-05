@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import Avatar from "./_avatar";
+import Reader from "./_reader";
+import AvatarEditor from "../editors/avatareditor";
 
 function AvatarProfileImg({ first, last, imageurl, error }) {
     let [editing, setEditing] = useState(false);
@@ -23,7 +24,7 @@ function AvatarProfileImg({ first, last, imageurl, error }) {
 }
 
 export default function AvatarProfile() {
-    return <Avatar component={AvatarProfileImg} />;
+    return <Reader component={AvatarProfileImg} />;
 }
 
 const styles = {

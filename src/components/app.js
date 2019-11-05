@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter, Route } from "react-router-dom";
-import AvatarHeader from "./avatar/avatarheader";
+import AvatarHeader from "./readers/avatarheader";
 import Profile from "./views/profile";
 
 export default function App() {

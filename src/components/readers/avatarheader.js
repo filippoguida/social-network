@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Avatar from "./_avatar";
+import Reader from "./_reader";
 import AvatarEditor from "../editors/avatareditor";
 
 function AvatarHeaderImg({ first, last, imageurl, error }) {
@@ -25,7 +25,7 @@ function AvatarHeaderImg({ first, last, imageurl, error }) {
 }
 
 export default function AvatarHeader() {
-    return <Avatar component={AvatarHeaderImg} />;
+    return <Reader component={AvatarHeaderImg} />;
 }
 
 const styles = {

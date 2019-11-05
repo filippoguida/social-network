@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "../modules/axios";
 
-export default class Avatar extends React.Component {
+export default class Reader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
