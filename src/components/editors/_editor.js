@@ -7,8 +7,12 @@ export default class Editor extends React.Component {
         this.state = {};
     }
 
+    syncData() {
+        return axios.post("/user").then(user => this.setState(user.data));
+    }
+
     async componentDidMount() {
-        await axios.post("/user").then(user => this.setState(user.data));
+        await this.syncData();
     }
 
     handleInput({ target }) {
@@ -38,6 +42,7 @@ export default class Editor extends React.Component {
             <Component
                 {...this.state}
                 error={this.state.error}
+                syncData={() => this.syncData()}
                 handleInput={e => this.handleInput(e)}
                 handleSubmit={e => this.handleSubmit(e)}
                 handleUpload={file => this.handleUpload(file)}

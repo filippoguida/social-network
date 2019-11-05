@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Reader from "./_reader";
 import AvatarEditor from "../editors/avatareditor";
 
-function AvatarProfileImg({ first, last, imageurl, error }) {
+function AvatarProfileImg({ error, syncData, first, last, imageurl }) {
     let [editing, setEditing] = useState(false);
     let toggleEditing = () => setEditing(!editing);
-    let url = imageurl || "public/images/profile-default.png";
+    let url = imageurl || "/public/images/profile-default.png";
     return (
         <div onClick={toggleEditing}>
             {error && (
@@ -18,7 +18,14 @@ function AvatarProfileImg({ first, last, imageurl, error }) {
                 src={url}
                 alt={`${first} ${last}`}
             />
-            {editing && <AvatarEditor onUpload={toggleEditing} />}
+            {editing && (
+                <AvatarEditor
+                    onUpload={() => {
+                        syncData();
+                        toggleEditing();
+                    }}
+                />
+            )}
         </div>
     );
 }
