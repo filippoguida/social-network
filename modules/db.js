@@ -52,11 +52,43 @@ module.exports.getUserData = userId => {
     });
 };
 
+module.exports.getFriendshipStatus = (userId1, userId2) => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT * FROM friendships WHERE (receiver_id = $1 AND sender_id = $2) OR (receiver_id = $2 AND sender_id = $1)`,
+            [userId1, userId2]
+        )
+            .then(sqlTab => resolve(sqlTab.rows[0]))
+            .catch(err => reject(err));
+    });
+};
+
+module.exports.sendFriendRequest = (senderId, receiverId) => {
+    return db.query(
+        `INSERT INTO friendships (sender_id, receiver_id) VALUES ($1, $2)`,
+        [senderId, receiverId]
+    );
+};
+
+module.exports.acceptFriendRequest = (senderId, receiverId) => {
+    return db.query(
+        `UPDATE friendships SET accepted = TRUE WHERE (receiver_id = $2 AND sender_id = $1)`,
+        [senderId, receiverId]
+    );
+};
+
+module.exports.endFriendship = (userId1, userId2) => {
+    return db.query(
+        `DELETE FROM friendships WHERE (receiver_id = $1 AND sender_id = $2) OR (receiver_id = $2 AND sender_id = $1)`,
+        [userId1, userId2]
+    );
+};
+
 module.exports.searchUsers = userquery => {
     return new Promise((resolve, reject) => {
         db.query(
             `SELECT first, last, imageurl, id FROM users
-        WHERE CONCAT(first, ' ', last) ILIKE $1
+        WHERE (first ILIKE $1 OR last ILIKE $1 OR CONCAT(first, ' ', last) ILIKE $1 OR CONCAT(last, ' ', first) ILIKE $1)
         ORDER BY id DESC LIMIT 6;`,
             [userquery + "%"]
         )

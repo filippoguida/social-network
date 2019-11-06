@@ -41,9 +41,23 @@ app.get(["/searchusers/", "/searchusers/:userquery"], rq.login, (req, res) => {
             if (!userList) res.sendStatus(404);
             else res.json(userList);
         })
-        .catch(e => console.log(e))
         .catch(() => res.json({ error: true }));
 });
+
+app.get(
+    ["/get-friendship-status/", "/get-friendship-status/:otherUserId"],
+    (req, res) => {
+        let id1 = req.session.userId;
+        let id2 = req.params.otherUserId || "";
+        db.getFriendshipStatus(id1, id2)
+            .then(status => {
+                console.log(status);
+                if (!status) res.json(null);
+                else res.json(status);
+            })
+            .catch(() => res.json({ error: true }));
+    }
+);
 
 //- HTML GET
 const sendHtml = (req, res) => res.sendFile(__dirname + "/index.html");
@@ -66,10 +80,7 @@ app.post("/login", (req, res) => {
             req.session.userId = id;
             res.sendStatus(200);
         })
-        .catch(e => {
-            console.log(e);
-            res.sendStatus(500);
-        });
+        .catch(e => res.sendStatus(500));
 });
 
 app.post("/user", (req, res) => {
@@ -91,6 +102,27 @@ app.post("/profilepicture", uploader.single("file"), (req, res) => {
 app.post("/biography", (req, res) => {
     let { biography } = req.body;
     db.updateBio(req.session.userId, biography)
+        .then(() => res.sendStatus(200))
+        .catch(() => res.sendStatus(500));
+});
+
+app.post("/send-friend-request", (req, res) => {
+    let { otherUser } = req.body;
+    db.sendFriendRequest(req.session.userId, otherUser.id)
+        .then(() => res.sendStatus(200))
+        .catch(() => res.sendStatus(500));
+});
+
+app.post("/accept-friend-request", (req, res) => {
+    let { otherUser } = req.body;
+    db.acceptFriendRequest(req.session.userId, otherUser.id)
+        .then(() => res.sendStatus(200))
+        .catch(() => res.sendStatus(500));
+});
+
+app.post("/end-friend-request", (req, res) => {
+    let { otherUser } = req.body;
+    db.endFriendship(req.session.userId, otherUser.id)
         .then(() => res.sendStatus(200))
         .catch(() => res.sendStatus(500));
 });
