@@ -2,21 +2,13 @@ import React, { useState } from "react";
 import View from "./_view";
 import { Main, Header } from "../partials/layouts";
 import { AvatarEditorModal } from "../uix/modals";
-import { AvatarProfile, AvatarHeader } from "../uix/avatar";
-import { BiographyEditable } from "../uix/biography";
+import { AvatarHeader } from "../uix/avatar";
+import { FindPeopleBar } from "../uix/searchbars";
 
-function ProfileView({
-    first,
-    last,
-    imageurl,
-    biography,
-    handleInput,
-    handleSubmit,
-    handleUpload
-}) {
+function FindPeopleView({ first, last, imageurl, handleUpload, handleGet }) {
     let [editAvatar, setEditAvatar] = useState(false);
     let toggleEditAvatar = () => setEditAvatar(!editAvatar);
-
+    let [userList, setUserList] = useState(null);
     return (
         <React.Fragment>
             <Header
@@ -32,16 +24,15 @@ function ProfileView({
             <Main
                 component={
                     <div style={styles.container}>
-                        <AvatarProfile
-                            first={first}
-                            last={last}
-                            imageurl={imageurl}
-                            onClick={() => toggleEditAvatar()}
-                        />
-                        <BiographyEditable
-                            biography={biography}
-                            onInput={e => handleInput(e)}
-                            onEdit={() => handleSubmit("/biography")}
+                        <FindPeopleBar
+                            onInput={async ({ target }) => {
+                                setUserList(
+                                    await handleGet(
+                                        "/searchusers/" + target.value
+                                    )
+                                );
+                            }}
+                            userList={userList}
                         />
                     </div>
                 }
@@ -55,8 +46,8 @@ function ProfileView({
     );
 }
 
-export default function Profile(props) {
-    return <View {...props} component={ProfileView} />;
+export default function FindPeople(props) {
+    return <View {...props} component={FindPeopleView} />;
 }
 
 const styles = {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import View from "./_view";
+import { Main, Header } from "../partials/layouts";
 import { AvatarEditorModal } from "../uix/modals";
 import { AvatarProfile, AvatarHeader } from "../uix/avatar";
 import { Biography } from "../uix/biography";
@@ -9,27 +10,30 @@ function OtherProfileView({ first, last, imageurl, otherUser, handleUpload }) {
     let toggleEditAvatar = () => setEditAvatar(!editAvatar);
     return (
         <React.Fragment>
-            <div style={styles.headerContainer}>
-                <img src="/public/images/header-logo.png" />
-                <AvatarHeader
-                    first={first}
-                    last={last}
-                    imageurl={imageurl}
-                    onClick={() => toggleEditAvatar()}
-                />
-            </div>
-            <div style={styles.mainContainer}>
-                {otherUser && (
-                    <div style={styles.profileContainer}>
-                        <AvatarProfile
-                            first={otherUser.first}
-                            last={otherUser.last}
-                            imageurl={otherUser.imageurl}
-                        />
-                        <Biography biography={otherUser.biography} />
-                    </div>
-                )}
-            </div>
+            <Header
+                component={
+                    <AvatarHeader
+                        first={first}
+                        last={last}
+                        imageurl={imageurl}
+                        onClick={() => toggleEditAvatar()}
+                    />
+                }
+            />
+            <Main
+                component={
+                    otherUser && (
+                        <div style={styles.container}>
+                            <AvatarProfile
+                                first={otherUser.first}
+                                last={otherUser.last}
+                                imageurl={otherUser.imageurl}
+                            />
+                            <Biography biography={otherUser.biography} />
+                        </div>
+                    )
+                }
+            />
             {editAvatar && (
                 <AvatarEditorModal
                     onLoad={picture => handleUpload("/profilepicture", picture)}
@@ -44,15 +48,7 @@ export default function OtherProfile(props) {
 }
 
 const styles = {
-    headerContainer: {
-        display: "flex",
-        justifyContent: "space-between"
-    },
-    mainContainer: {
-        display: "flex",
-        justifyContent: "center"
-    },
-    profileContainer: {
+    container: {
         display: "flex",
         justifyContents: "center",
         alignItems: "center",

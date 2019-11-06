@@ -52,6 +52,19 @@ module.exports.getUserData = userId => {
     });
 };
 
+module.exports.searchUsers = userquery => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT first, last, imageurl, id FROM users
+        WHERE CONCAT(first, ' ', last) ILIKE $1
+        ORDER BY id DESC LIMIT 6;`,
+            [userquery + "%"]
+        )
+            .then(sqlTab => resolve(sqlTab.rows))
+            .catch(err => reject(err));
+    });
+};
+
 module.exports.updateProfilePicture = (userId, imgUrl) => {
     return db.query(`UPDATE users SET imageurl = $2 WHERE id = $1`, [
         userId,

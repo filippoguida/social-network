@@ -25,7 +25,7 @@ app.use(cookies);
 app.use(auth);
 
 //- JSON GET
-app.get(["/user", "/user/:userId"], rq.login, function(req, res) {
+app.get(["/user", "/user/:userId"], rq.login, (req, res) => {
     let id = req.params.userId || req.session.userId;
     db.getUserData(id)
         .then(userData => {
@@ -35,13 +35,23 @@ app.get(["/user", "/user/:userId"], rq.login, function(req, res) {
         .catch(() => res.json({ error: true }));
 });
 
+app.get(["/searchusers/", "/searchusers/:userquery"], rq.login, (req, res) => {
+    db.searchUsers(req.params.userquery || "")
+        .then(userList => {
+            if (!userList) res.sendStatus(404);
+            else res.json(userList);
+        })
+        .catch(e => console.log(e))
+        .catch(() => res.json({ error: true }));
+});
+
 //- HTML GET
 const sendHtml = (req, res) => res.sendFile(__dirname + "/index.html");
 app.get("/welcome", rq.noLogin, sendHtml);
 app.get("*", rq.login, sendHtml);
 
 //- POST
-app.post("/registration", function(req, res) {
+app.post("/registration", (req, res) => {
     db.addUser(req.body)
         .then(id => {
             req.session.userId = id;

@@ -30,6 +30,16 @@ export default class View extends React.Component {
         });
     }
 
+    async handleGet(query) {
+        try {
+            let result = await axios.get(query);
+            return result.data;
+        } catch (e) {
+            this.setState({ error: true });
+            return null;
+        }
+    }
+
     handleSubmit(action) {
         return axios
             .post(action, { ...this.state })
@@ -59,6 +69,7 @@ export default class View extends React.Component {
                     {...this.props}
                     setMainState={change => this.setMainState(change)}
                     handleInput={e => this.handleInput(e)}
+                    handleGet={route => this.handleGet(route)}
                     handleSubmit={action => this.handleSubmit(action)}
                     handleUpload={(action, file) =>
                         this.handleUpload(action, file)
