@@ -92,6 +92,21 @@ module.exports.sendFriendRequest = (senderId, receiverId) => {
     );
 };
 
+module.exports.getChatMessages = () => {
+    return new Promise((resolve, reject) => {
+        db.query(`SELECT* FROM chat`)
+            .then(sqlTab => resolve(sqlTab.rows))
+            .catch(err => reject(err));
+    });
+};
+
+module.exports.addChatMessage = (userId, message) => {
+    return db.query(`INSERT INTO chat (sender_id, message) VALUES ($1, $2)`, [
+        userId,
+        message
+    ]);
+};
+
 module.exports.acceptFriendRequest = (senderId, receiverId) => {
     return db.query(
         `UPDATE friendships SET accepted = TRUE WHERE (sender_id =$1 AND receiver_id = $2)`,

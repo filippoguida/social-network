@@ -7,6 +7,8 @@ const auth = require("./middelware/auth");
 const rq = require("./middelware/requirements");
 const express = require("express");
 const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server, { origins: "localhost:8080" });
 
 app.use(compression());
 if (process.env.NODE_ENV != "production") {
@@ -21,7 +23,7 @@ if (process.env.NODE_ENV != "production") {
 }
 app.use("/public", express.static("public"));
 app.use(express.json());
-app.use(cookies);
+app.use(cookies(io));
 app.use(auth);
 
 //- JSON GET
@@ -46,18 +48,36 @@ app.get(["/searchusers/", "/searchusers/:userquery"], rq.login, (req, res) => {
 
 app.get(
     ["/get-friendship-status/", "/get-friendship-status/:otherUserId"],
+    rq.login,
     (req, res) => {
         let id1 = req.session.userId;
         let id2 = req.params.otherUserId || "";
         db.getFriendshipStatus(id1, id2)
             .then(status => {
-                console.log(status);
                 if (!status) res.json(null);
                 else res.json(status);
             })
             .catch(() => res.json({ error: true }));
     }
 );
+
+app.get("/friends-list", rq.login, (req, res) => {
+    db.getFriendsList(req.session.userId)
+        .then(frindsList => {
+            if (!frindsList) res.json(null);
+            else res.json(frindsList);
+        })
+        .catch(() => res.json({ error: true }));
+});
+
+app.get("/friend-requests-list", rq.login, (req, res) => {
+    db.getFriendsRequests(req.session.userId)
+        .then(requestsList => {
+            if (!requestsList) res.json(null);
+            else res.json(requestsList);
+        })
+        .catch(() => res.json({ error: true }));
+});
 
 //- HTML GET
 const sendHtml = (req, res) => res.sendFile(__dirname + "/index.html");
@@ -80,7 +100,7 @@ app.post("/login", (req, res) => {
             req.session.userId = id;
             res.sendStatus(200);
         })
-        .catch(e => res.sendStatus(500));
+        .catch(() => res.sendStatus(500));
 });
 
 app.post("/user", (req, res) => {
@@ -115,7 +135,7 @@ app.post("/send-friend-request", (req, res) => {
 
 app.post("/accept-friend-request", (req, res) => {
     let { otherUser } = req.body;
-    db.acceptFriendRequest(req.session.userId, otherUser.id)
+    db.acceptFriendRequest(otherUser.id, req.session.userId)
         .then(() => res.sendStatus(200))
         .catch(() => res.sendStatus(500));
 });
@@ -127,6 +147,24 @@ app.post("/end-friend-request", (req, res) => {
         .catch(() => res.sendStatus(500));
 });
 
-app.listen(8080, function() {
+server.listen(8080, function() {
     console.log("I'm listening.");
+});
+
+io.on("connection", socket => {
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+    const userId = socket.request.session.userId;
+
+    db.getChatMessages(userId).then(messages => {
+        io.sockets.emit("GET_CHAT_MESSAGES", messages);
+    });
+
+    socket.on("ADD_CHAT_MESSAGE", message => {
+        db.addChatMessage(socket.request.session.userId, message).then(() =>
+            console.log("done")
+        );
+        io.sockets.emit("ADD_CHAT_MESSAGE", message);
+    });
 });
