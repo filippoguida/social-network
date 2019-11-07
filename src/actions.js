@@ -24,7 +24,6 @@ export async function getChatMessages(messages) {
 }
 
 export async function addChatMessage(message) {
-    console.log(message);
     return {
         type: "ADD_CHAT_MESSAGE",
         message: message

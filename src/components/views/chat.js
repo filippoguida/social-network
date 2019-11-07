@@ -14,12 +14,11 @@ function ProfileView({ first, last, imageurl, handleUpload }) {
     );
     useEffect(() => {
         dispatch(getChatMessages());
-        socket.emit("ADD_CHAT_MESSAGE", "asdljhbflksdflakjsdblkfjba");
     }, []);
 
     let [editAvatar, setEditAvatar] = useState(false);
     let toggleEditAvatar = () => setEditAvatar(!editAvatar);
-
+    //socket.emit("ADD_CHAT_MESSAGE", "asdljhbflksdflakjsdblkfjba");
     return (
         <React.Fragment>
             <Header

@@ -8,10 +8,20 @@ export function Main({ component }) {
 export function Header({ component }) {
     return (
         <div style={styles.headerContainer}>
-            <img src="/public/images/header-logo.png" />
+            <Link style={styles.link} to="/">
+                <img src="/public/images/header-logo.png" />
+            </Link>
             <div>
                 <div style={styles.headerComponent}>
-                    <Link to="/findpeople">+ find people</Link>
+                    <Link style={styles.link} to="/findpeople">
+                        Find People
+                    </Link>
+                    <Link style={styles.link} to="/friends">
+                        Friends
+                    </Link>
+                    <Link style={styles.link} to="/chat">
+                        Chat
+                    </Link>
                 </div>
                 <div style={styles.headerComponent}>{component}</div>
             </div>
@@ -32,5 +42,8 @@ const styles = {
         display: "inline-block",
         marginLeft: "30px",
         verticalAlign: "middle"
+    },
+    link: {
+        margin: "0 10px"
     }
 };
