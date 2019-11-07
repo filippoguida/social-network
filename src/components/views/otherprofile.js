@@ -19,32 +19,33 @@ function OtherProfileView({
     let [editAvatar, setEditAvatar] = useState(false);
     let toggleEditAvatar = () => setEditAvatar(!editAvatar);
 
-    let getFriendshipStatus = async () => {
-        if (!otherUser) return null;
-
-        let url = "/get-friendship-status/" + otherUser.id;
-        let status = await handleGet(url);
-        if (!status) return null;
-
-        let { sender_id, accepted } = status;
-        if (accepted == true) return "accepted";
-        if (sender_id == id && accepted == false) return "sent";
-        if (sender_id == id && accepted == true) return "received";
-    };
-
     let [friendshipStatus, setFriendshipStatus] = useState();
     useEffect(() => {
         (async function() {
-            let state = await getFriendshipStatus();
-            setFriendshipStatus(state);
+            if (otherUser) {
+                let url = "/get-friendship-status/" + otherUser.id;
+                let status = await handleGet(url);
+                let state;
+                if (!status) state = null;
+                else {
+                    console.log(id);
+                    console.log(status);
+                    let { sender_id, accepted } = status;
+                    if (accepted == true) state = "accepted";
+                    if (sender_id == id && accepted == false) state = "sent";
+                    if (sender_id == otherUser.id && accepted == false)
+                        state = "received";
+                }
+                setFriendshipStatus(state);
+            }
         })();
-    });
+    }, [otherUser]);
 
     let handleClick = async () => {
         if (!friendshipStatus) {
             await handleSubmit("/send-friend-request");
             setFriendshipStatus("sent");
-        } else if (friendshipStatus == "pending") {
+        } else if (friendshipStatus == "received") {
             await handleSubmit("/accept-friend-request");
             setFriendshipStatus("accepted");
         } else if (friendshipStatus == "accepted") {

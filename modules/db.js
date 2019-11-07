@@ -63,6 +63,28 @@ module.exports.getFriendshipStatus = (userId1, userId2) => {
     });
 };
 
+module.exports.getFriendsList = userId => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT first, last, imageurl, accepted, friendships.id, users.id AS profileId FROM friendships JOIN users ON (accepted = true AND receiver_id = $1 AND sender_id = users.id) OR (accepted = true AND sender_id = $1 AND receiver_id = users.id)`,
+            [userId]
+        )
+            .then(sqlTab => resolve(sqlTab.rows))
+            .catch(err => reject(err));
+    });
+};
+
+module.exports.getFriendsRequests = userId => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            `SELECT first, last, imageurl, accepted, friendships.id, users.id AS profileId FROM friendships JOIN users ON (accepted = false AND receiver_id = $1 AND sender_id = users.id)`,
+            [userId]
+        )
+            .then(sqlTab => resolve(sqlTab.rows))
+            .catch(err => reject(err));
+    });
+};
+
 module.exports.sendFriendRequest = (senderId, receiverId) => {
     return db.query(
         `INSERT INTO friendships (sender_id, receiver_id) VALUES ($1, $2)`,
@@ -72,7 +94,7 @@ module.exports.sendFriendRequest = (senderId, receiverId) => {
 
 module.exports.acceptFriendRequest = (senderId, receiverId) => {
     return db.query(
-        `UPDATE friendships SET accepted = TRUE WHERE (receiver_id = $2 AND sender_id = $1)`,
+        `UPDATE friendships SET accepted = TRUE WHERE (sender_id =$1 AND receiver_id = $2)`,
         [senderId, receiverId]
     );
 };
