@@ -94,7 +94,9 @@ module.exports.sendFriendRequest = (senderId, receiverId) => {
 
 module.exports.getChatMessages = () => {
     return new Promise((resolve, reject) => {
-        db.query(`SELECT* FROM chat`)
+        db.query(
+            `SELECT first, last, imageurl, message, chat.id, users.id AS senderid FROM chat JOIN users ON (sender_id = users.id) ORDER BY chat.id`
+        )
             .then(sqlTab => resolve(sqlTab.rows))
             .catch(err => reject(err));
     });

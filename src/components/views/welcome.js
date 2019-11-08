@@ -7,8 +7,7 @@ import Login from "../forms/login";
 function WelcomeLayout() {
     return (
         <div style={styles.welcomeContainer}>
-            <h1>Welcome to</h1>
-            <img src="public/images/welcome-logo.png" />
+            <img className="header-logo" src="/public/images/chat.svg" />
             <HashRouter>
                 <div>
                     <Route exact path="/" component={Registration} />
@@ -28,6 +27,7 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         justifyContents: "center",
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: "100px"
     }
 };

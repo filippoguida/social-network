@@ -1,46 +1,90 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { socket } from "../socket";
 import View from "./_view";
 import { Main, Header } from "../partials/layouts";
-import { AvatarEditorModal } from "../uix/modals";
 import { AvatarHeader } from "../uix/avatar";
-import { useSelector, useDispatch } from "react-redux";
-import { getChatMessages } from "../../actions";
-import { socket } from "../socket";
+import { Link } from "react-router-dom";
 
-function ProfileView({ first, last, imageurl, handleUpload }) {
-    let dispatch = useDispatch();
+function ProfileView({ first, last, imageurl }) {
+    const chatRef = useRef();
     const chatMessages = useSelector(
         state => state.chatMessages && state.chatMessages
     );
-    useEffect(() => {
-        dispatch(getChatMessages());
-    }, []);
 
-    let [editAvatar, setEditAvatar] = useState(false);
-    let toggleEditAvatar = () => setEditAvatar(!editAvatar);
-    //socket.emit("ADD_CHAT_MESSAGE", "asdljhbflksdflakjsdblkfjba");
+    useEffect(() => {
+        if (chatRef.current) {
+            const { scrollHeight: sH, clientHeight: cH } = chatRef.current;
+            chatRef.current.scrollTop = sH - cH;
+        }
+    }, [chatMessages]);
+
+    const keyCheck = e => {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            socket.emit("ADD_CHAT_MESSAGE", e.target.value);
+            e.target.value = "";
+        }
+    };
+
+    if (!chatMessages) {
+        return null;
+    }
+
     return (
         <React.Fragment>
             <Header
                 component={
-                    <AvatarHeader
-                        first={first}
-                        last={last}
-                        imageurl={imageurl}
-                        onClick={() => toggleEditAvatar()}
-                    />
+                    <Link to="/">
+                        <AvatarHeader
+                            first={first}
+                            last={last}
+                            imageurl={imageurl}
+                        />
+                    </Link>
                 }
             />
-            <Main component={<div style={styles.container}></div>} />
-            {chatMessages &&
-                chatMessages.map((message, key) => (
-                    <p key={key}>{message.message}</p>
-                ))}
-            {editAvatar && (
-                <AvatarEditorModal
-                    onLoad={picture => handleUpload("/profilepicture", picture)}
-                />
-            )}
+            <Main
+                component={
+                    <div className="main-container">
+                        <textarea
+                            className="chat-box"
+                            placeholder="... send a message"
+                            onKeyDown={keyCheck}
+                        ></textarea>
+                        <div className="chat-container" ref={chatRef}>
+                            {chatMessages &&
+                                chatMessages.map((message, key) => (
+                                    <div
+                                        key={"div" + key}
+                                        className="chat-message"
+                                    >
+                                        <Link
+                                            key={"link" + key}
+                                            to={"/users/" + message.senderid}
+                                        >
+                                            <img
+                                                key={"img" + key}
+                                                src={message.imageurl}
+                                                alt={
+                                                    message.first +
+                                                    "-" +
+                                                    message.last
+                                                }
+                                            />
+                                        </Link>
+                                        <div>
+                                            <h4>
+                                                {message.first} {message.last}
+                                            </h4>
+                                            <p>{message.message}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </div>
+                }
+            />
         </React.Fragment>
     );
 }
@@ -48,12 +92,3 @@ function ProfileView({ first, last, imageurl, handleUpload }) {
 export default function Profile(props) {
     return <View {...props} component={ProfileView} />;
 }
-
-const styles = {
-    container: {
-        display: "flex",
-        justifyContents: "center",
-        alignItems: "center",
-        margin: "100px"
-    }
-};

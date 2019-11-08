@@ -1,37 +1,38 @@
 import React from "react";
 
-function Avatar({ first, last, imageurl, onClick, style }) {
+function Avatar({ first, last, imageurl, onClick, blur }) {
     let url = imageurl || "/public/images/profile-default.png";
     return (
-        <div
-            onClick={() => {
-                if (onClick) onClick();
-            }}
-        >
-            <img style={style} src={url} alt={`${first}-${last}`} />
-        </div>
+        <React.Fragment>
+            {!blur && (
+                <img
+                    onClick={() => {
+                        if (onClick) onClick();
+                    }}
+                    className="avatar"
+                    src={url}
+                    alt={`${first}-${last}`}
+                />
+            )}
+            {blur && (
+                <img
+                    style="filter:blur(8px)"
+                    onClick={() => {
+                        if (onClick) onClick();
+                    }}
+                    className="avatar"
+                    src={url}
+                    alt={`${first}-${last}`}
+                />
+            )}
+        </React.Fragment>
     );
 }
 
 export function AvatarHeader(props) {
-    return <Avatar {...props} style={styles.avatarHeader} />;
+    return <Avatar {...props} />;
 }
 
 export function AvatarProfile(props) {
-    return <Avatar {...props} style={styles.avatarProfile} />;
+    return <Avatar {...props} />;
 }
-
-const styles = {
-    avatarHeader: {
-        borderRadius: "50%",
-        height: "80px",
-        width: "80px",
-        objectFit: "cover"
-    },
-    avatarProfile: {
-        borderRadius: "5px",
-        height: "300px",
-        width: "300px",
-        objectFit: "cover"
-    }
-};

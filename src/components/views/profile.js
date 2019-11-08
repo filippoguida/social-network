@@ -4,6 +4,7 @@ import { Main, Header } from "../partials/layouts";
 import { AvatarEditorModal } from "../uix/modals";
 import { AvatarProfile, AvatarHeader } from "../uix/avatar";
 import { BiographyEditable } from "../uix/biography";
+import { Link } from "react-router-dom";
 
 function ProfileView({
     first,
@@ -21,28 +22,36 @@ function ProfileView({
         <React.Fragment>
             <Header
                 component={
-                    <AvatarHeader
-                        first={first}
-                        last={last}
-                        imageurl={imageurl}
-                        onClick={() => toggleEditAvatar()}
-                    />
+                    <Link to="/">
+                        <AvatarHeader
+                            first={first}
+                            last={last}
+                            imageurl={imageurl}
+                        />
+                    </Link>
                 }
             />
             <Main
                 component={
-                    <div style={styles.container}>
-                        <AvatarProfile
-                            first={first}
-                            last={last}
-                            imageurl={imageurl}
-                            onClick={() => toggleEditAvatar()}
-                        />
-                        <BiographyEditable
-                            biography={biography}
-                            onInput={e => handleInput(e)}
-                            onEdit={() => handleSubmit("/biography")}
-                        />
+                    <div className="profile">
+                        <div>
+                            <AvatarProfile
+                                first={first}
+                                last={last}
+                                imageurl={imageurl}
+                                onClick={() => toggleEditAvatar()}
+                            />
+                        </div>
+                        <div>
+                            <h1>
+                                {first} {last}
+                            </h1>
+                            <BiographyEditable
+                                biography={biography}
+                                onInput={e => handleInput(e)}
+                                onEdit={() => handleSubmit("/biography")}
+                            />
+                        </div>
                     </div>
                 }
             />
@@ -58,12 +67,3 @@ function ProfileView({
 export default function Profile(props) {
     return <View {...props} component={ProfileView} />;
 }
-
-const styles = {
-    container: {
-        display: "flex",
-        justifyContents: "center",
-        alignItems: "center",
-        margin: "100px"
-    }
-};

@@ -1,0 +1,184 @@
+* {
+    font-family: "Raleway", sans-serif;
+}
+
+body {
+    background: #f7fff7;
+}
+
+.chat-container img {
+    animation: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        transform: scale(1);
+    }
+    10% {
+        transform: scale(0);
+    }
+    100%% {
+        transform: scale(1);
+    }
+}
+
+/* LAYOUT */
+/* main */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+/* header */
+.header-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 150px;
+}
+.header-logo {
+    height: 80px;
+    width: 80px;
+}
+.header-menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 300px;
+}
+.header-menu-icon {
+    width: 22px;
+    height: 22px;
+    opacity: 0.1;
+    margin: 0 10px;
+}
+.header-menu-icon:hover {
+    opacity: 1;
+}
+.header-component {
+    height: 70px;
+    width: 70px;
+}
+
+/* VIEWS */
+/* profile */
+.profile {
+    height: 100%;
+    display: flex;
+    justify-contents: space-between;
+    align-items: center;
+}
+.profile > div {
+    width: 300px;
+    height: 300px;
+    margin: 25px;
+}
+.profile > div > h1 {
+    font-size: 24pt;
+}
+/* people*/
+.people-container {
+    display: flex;
+    justify-content: left;
+    width: 50%;
+}
+.people-container > img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    opacity: 0.2;
+}
+.people-results {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+}
+.people-results * {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 10px;
+    text-decoration: none;
+    color: black;
+}
+.people-results img {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+/* friends */
+.friends-container {
+    width: 50%;
+}
+/* chat */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    height: 50vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.chat-container img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.chat-message {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+.chat-message * {
+    margin-right: 10px;
+}
+.chat-box {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.chat-send-btn {
+    background: transparent;
+    margin: 10px;
+}
+
+/* UIX */
+/* biography */
+.biography,
+.biography-editing {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 50%;
+}
+.biography > img,
+.biography-editing > img {
+    width: 20px;
+    height: 20px;
+}
+.biography textarea {
+    fontsize: 12pt;
+    width: 280px;
+    height: 100px;
+    resize: none;
+    background: transparent;
+    border: none;
+}
+.biography-editing textarea {
+    fontsize: 12pt;
+    width: 280px;
+    height: 100px;
+    resize: none;
+    background: transparent;
+}
+
+/* avatar */
+.avatar {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}

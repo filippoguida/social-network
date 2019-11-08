@@ -163,8 +163,9 @@ io.on("connection", socket => {
 
     socket.on("ADD_CHAT_MESSAGE", message => {
         db.addChatMessage(socket.request.session.userId, message).then(() =>
-            console.log("done")
+            db.getChatMessages(userId).then(messages => {
+                io.sockets.emit("GET_CHAT_MESSAGES", messages);
+            })
         );
-        io.sockets.emit("ADD_CHAT_MESSAGE", message);
     });
 });

@@ -2,52 +2,52 @@ import React, { useState } from "react";
 
 export function Biography({ biography }) {
     return (
-        <div>
-            <div style={styles.biographyContaienr}>
-                <textarea
-                    name="biography"
-                    rows="10"
-                    cols="50"
-                    value={biography || ""}
-                    readOnly={true}
-                />
-            </div>
+        <div className="biography">
+            <textarea
+                name="biography"
+                value={biography || ""}
+                readOnly={true}
+            />
         </div>
     );
 }
 
 export function BiographyEditable({ biography, onEdit, onInput }) {
     const [editing, setEditing] = useState(false);
-    const toggleEditor = () => setEditing(!editing);
+    const [className, setClassName] = useState("biography");
+    const toggleEditor = () => {
+        if (editing) {
+            setClassName("biography");
+            onEdit();
+        } else {
+            setClassName("biography-editing");
+        }
+        setEditing(!editing);
+    };
     return (
-        <div style={styles.biographyContaienr}>
+        <div className={className}>
             <textarea
                 name="biography"
-                rows="10"
+                rows="15"
                 cols="50"
                 value={biography || ""}
                 onInput={e => onInput(e)}
                 readOnly={!editing}
             />
-
-            {!editing && <button onClick={() => toggleEditor()}>edit</button>}
+            {!editing && (
+                <img
+                    src="/public/images/edit.svg"
+                    alt="edit-button"
+                    onClick={() => toggleEditor()}
+                />
+            )}
             {editing && (
-                <button
-                    onClick={() => {
-                        onEdit();
-                        toggleEditor();
-                    }}
-                >
-                    save
-                </button>
+                <img
+                    src="/public/images/lock.svg"
+                    alt="lock-button"
+                    onClick={() => toggleEditor()}
+                />
             )}
         </div>
     );
 }
-
-const styles = {
-    biographyContaienr: {
-        display: "flex",
-        margin: "50px"
-    }
-};

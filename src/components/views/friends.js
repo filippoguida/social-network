@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import View from "./_view";
 import { Main, Header } from "../partials/layouts";
-import { AvatarEditorModal } from "../uix/modals";
 import { AvatarHeader } from "../uix/avatar";
 import { useSelector, useDispatch } from "react-redux";
 import { getFriends, getFriendRequests } from "../../actions";
+import { Link } from "react-router-dom";
 
-function ProfileView({ first, last, imageurl, handleUpload }) {
+function ProfileView({ first, last, imageurl }) {
     let dispatch = useDispatch();
     const friends = useSelector(state => state.friends && state.friends);
     const friendRequests = useSelector(
@@ -17,30 +17,85 @@ function ProfileView({ first, last, imageurl, handleUpload }) {
         dispatch(getFriendRequests());
     }, []);
 
-    let [editAvatar, setEditAvatar] = useState(false);
-    let toggleEditAvatar = () => setEditAvatar(!editAvatar);
-
     return (
         <React.Fragment>
             <Header
                 component={
-                    <AvatarHeader
-                        first={first}
-                        last={last}
-                        imageurl={imageurl}
-                        onClick={() => toggleEditAvatar()}
-                    />
+                    <Link to="/">
+                        <AvatarHeader
+                            first={first}
+                            last={last}
+                            imageurl={imageurl}
+                        />
+                    </Link>
                 }
             />
-            <Main component={<div style={styles.container}></div>} />
-            {friends && friends.map(f => <p key={f.id}>{f.first}</p>)}
-            {friendRequests &&
-                friendRequests.map(req => <p key={req.id}>{req.first}</p>)}
-            {editAvatar && (
-                <AvatarEditorModal
-                    onLoad={picture => handleUpload("/profilepicture", picture)}
-                />
-            )}
+            <Main
+                component={
+                    <div className="friends-container">
+                        <div>
+                            <div className="people-results">
+                                <h4>Friends</h4>
+                                <br></br>
+                                {friends &&
+                                    friends.map(user => (
+                                        <Link
+                                            key={"link" + user.profileid}
+                                            to={"/users/" + user.profileid}
+                                        >
+                                            <div key={"div" + user.profileid}>
+                                                <img
+                                                    key={"img" + user.profileid}
+                                                    src={user.imageurl}
+                                                    alt={
+                                                        user.first +
+                                                        "-" +
+                                                        user.last
+                                                    }
+                                                />
+                                                <h4>
+                                                    {user.first} {user.last}
+                                                </h4>
+                                            </div>
+                                        </Link>
+                                    ))}
+                            </div>
+                            <div>
+                                <div className="people-results">
+                                    <h4>Friend Requests</h4>
+                                    {friendRequests &&
+                                        friendRequests.map(user => (
+                                            <Link
+                                                key={"link" + user.profileid}
+                                                to={"/users/" + user.profileid}
+                                            >
+                                                <div
+                                                    key={"div" + user.profileid}
+                                                >
+                                                    <img
+                                                        key={
+                                                            "img" +
+                                                            user.profileid
+                                                        }
+                                                        src={user.imageurl}
+                                                        alt={
+                                                            user.first +
+                                                            "-" +
+                                                            user.last
+                                                        }
+                                                    />
+                                                    <h4>
+                                                        {user.first} {user.last}
+                                                    </h4>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            />
         </React.Fragment>
     );
 }
@@ -48,12 +103,3 @@ function ProfileView({ first, last, imageurl, handleUpload }) {
 export default function Profile(props) {
     return <View {...props} component={ProfileView} />;
 }
-
-const styles = {
-    container: {
-        display: "flex",
-        justifyContents: "center",
-        alignItems: "center",
-        margin: "100px"
-    }
-};
